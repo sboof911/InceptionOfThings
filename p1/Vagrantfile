@@ -1,10 +1,55 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.box = "base"
-end
+  
+	config.vm.define "amaachS" do |master|
+	  
+	  master.vm.box = "bento/ubuntu-16.04"
+	  master.vm.box_check_update = false
+	  master.vm.network "public_network", auto_config: true
+	  master.vm.hostname = "amaachS" 
+	  master.vm.provider "virtualbox" do |vb|
+		vb.gui = false
+		vb.memory = "1024"
+		vb.cpus = 1
+		vb.name = "amaachS"
+		vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+		vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
+	  end
+	
+	  master.vm.provision "shell",
+		run: "always",
+		inline: "ifconfig eth1 192.168.56.110  netmask 255.255.255.0 up" 
+	  master.vm.provision "shell",
+		run: "always",
+		path: "scripts/configure_master.sh",
+		privileged: true
+	end 
+   
+	# machine 2
+	config.vm.define "amaachSW" do |worker|
+	  
+	  worker.vm.box = "bento/ubuntu-16.04"
+	  worker.vm.box_check_update = false 
+	  worker.vm.network "public_network", auto_config: true
+	  worker.vm.hostname = "amaachSW"
+	  worker.vm.provider "virtualbox" do |vb|
+		vb.gui = false
+		vb.memory = "1024"
+		vb.cpus = 1
+		vb.name = "amaachSW"
+		vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+		vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
+	  end
+  
+	  worker.vm.provision "shell",
+		run: "always",
+		inline: "ifconfig eth1 192.168.56.111  netmask 255.255.255.0 up"
+	  worker.vm.provision "shell",
+		run: "always",
+		path: "scripts/configure_worker.sh",
+		privileged: true
+	end
+  
+  end
+  
+  
