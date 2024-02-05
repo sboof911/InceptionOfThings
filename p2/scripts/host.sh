@@ -13,6 +13,10 @@ kubectl apply -f /vagrant/confs/yamls/app1/app1-deployment.yaml
 kubectl apply -f /vagrant/confs/yamls/app1/app1-service.yaml
 kubectl apply -f /vagrant/confs/yamls/app1/app1-ingress.yaml
 
+kubectl apply -f /vagrant/confs/yamls/app2/app2-deployment.yaml
+kubectl apply -f /vagrant/confs/yamls/app2/app2-service.yaml
+kubectl apply -f /vagrant/confs/yamls/app2/app2-ingress.yaml
+
 kubectl apply -f /vagrant/confs/yamls/app3/app3-deployment.yaml
 kubectl apply -f /vagrant/confs/yamls/app3/app3-service.yaml
 kubectl apply -f /vagrant/confs/yamls/app3/app3-ingress.yaml
