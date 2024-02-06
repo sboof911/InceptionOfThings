@@ -18,3 +18,8 @@ kubectl apply -f /vagrant/confs/yamls/app2/app2-ingress.yaml
 kubectl apply -f /vagrant/confs/yamls/app3/app3-deployment.yaml
 kubectl apply -f /vagrant/confs/yamls/app3/app3-service.yaml
 kubectl apply -f /vagrant/confs/yamls/app3/app3-ingress.yaml
+
+
+
+#run script to protect the running apps.
+sh script.sh
