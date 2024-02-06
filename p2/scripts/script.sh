@@ -1,7 +1,8 @@
 #!/bin/sh
 
 while true; do
-    PODS=$(kubectl get pods)
+    sleep 60
+    PODS=$(kubectl get all -n kube-system)
 
     if [ $? -ne 0 ]; then
         echo "Error executing kubectl command. Make sure kubectl is installed and configured."
@@ -11,10 +12,12 @@ while true; do
     all_running=true
 
     echo "$PODS" | tail -n +2 | while read -r LINE; do
-        if ! echo "$LINE" | grep -q "Running"; then
+        if ! echo "$LINE" | grep -Eq "Running|Completed"; then
             echo "Error: Not all pods are running."
-            echo "Restating k3s service."
-            sudo service k3s restart
+            if ! echo "$LINE" | grep -q "ContainerCreating"; then
+                echo "Restating k3s service."
+                sudo service k3s restart
+            fi
             all_running=false
             break
         fi
@@ -24,7 +27,6 @@ while true; do
         break
     fi
 
-    sleep 60
 done
 
 echo "All pods are running."
